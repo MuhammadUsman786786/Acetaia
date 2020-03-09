@@ -1,9 +1,16 @@
 import React, {Component} from 'react';
-import {View, StatusBar,StyleSheet} from 'react-native';
-import HomeScreen from './Containers/HomeScreen';
+import {StatusBar, StyleSheet, View} from 'react-native';
+import HomeScreen from './HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Colors} from '../Theme';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import BatteryScreen from './BatteryScreen';
+import {createCompatNavigatorFactory} from '@react-navigation/compat';
+import BarrelDetailScreen from './BarrelDetailScreen';
+import OperationsScreen from './OperationsScreen';
+
+const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
 const navBarStyle = {
@@ -16,20 +23,38 @@ const navBarStyle = {
   },
 };
 
+const Home = () => {
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: Colors.primary,
+      }}>
+      <Tab.Screen name="Operazioni" component={OperationsScreen} />
+      <Tab.Screen name="Nuovo" component={BatteryScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      {/*<Tab.Screen name="Messages" component={Messages} />*/}
+    </Tab.Navigator>
+  );
+};
+
 class App extends Component {
   render() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="HomeScreen">
+          <Stack.Navigator
+          // initialRouteName={'BarrelDetailScreen'}
+          >
             <Stack.Screen
-              name="HomeScreen"
-              component={HomeScreen}
-              options={{
-                headerShown: true,
-                ...navBarStyle,
-              }}
+              name="Acetaia"
+              component={Home}
+              options={{...navBarStyle}}
+            />
+            <Stack.Screen
+              name="BarrelDetailScreen"
+              component={BarrelDetailScreen}
+              options={{...navBarStyle, headerTitle: 'Barile Info'}}
             />
           </Stack.Navigator>
         </NavigationContainer>

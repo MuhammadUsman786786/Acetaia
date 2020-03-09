@@ -16,5 +16,8 @@ export const deleteBarrel = data =>
   axios.delete(`${BASE_URL}/barili/api/${data.id}/`);
 
 //operations
+export const getOperations = () => axios.get(`${BASE_URL}/operazioni/api/`);
 export const createOperation = data =>
   axios.post(`${BASE_URL}/operazioni/api/`, data);
+export const deleteOperation = data =>
+  axios.delete(`${BASE_URL}/operazioni/api/${data.id}/`);

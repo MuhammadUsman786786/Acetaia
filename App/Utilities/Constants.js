@@ -56,12 +56,21 @@ export const BARREL_DETAIL_ITEM_KEYS = [
   {key: 'quantity', title: 'Q.ty', isDivider: false},
 ];
 
-// Type of Operation *
-// Vinegar type *
-// Barrel of Origin * dropdown barrel id
-//Destination Barrel *
-// Operator * (person id)
-// Measurement Type *
-// Measured value *
-// Q.tà *
-//Description
+export const DUMMY_OPERATIONS_DATA = [
+  {
+    id: 59,
+    op_type: 'test100',
+    vinegar_type: 'type',
+    barrel_or: 30,
+    operator: 11,
+    quantity: 0,
+  },
+  {
+    id: 66,
+    op_type: '1',
+    vinegar_type: '1',
+    barrel_or: 30,
+    operator: 12,
+    quantity: 0,
+  },
+];

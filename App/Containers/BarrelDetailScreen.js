@@ -4,29 +4,49 @@ import IconButton from '../Components/IconButton';
 import {BARREL_DETAIL_ITEM_KEYS, ICON_TYPES} from '../Utilities/Constants';
 import {moderateScale, scale} from 'react-native-size-matters';
 import {getParams} from '../Utils/Transform';
-import {deleteBarrelHandler, fetchBarrelHandler} from '../Services/ApiCaller';
+import {
+  deleteBarrelHandler,
+  deleteOperationHandler,
+  fetchBarrelHandler,
+  fetchOperationsHandler,
+} from '../Services/ApiCaller';
 import {showAlert} from '../Utils/UiUtils';
 import {Colors} from '../Theme';
 import moment from 'moment';
 import * as _ from 'lodash';
+import {printLogs} from '../Config/ReactotronConfig';
 
 class BarrelDetailScreen extends Component {
   constructor(props) {
     super(props);
     const {id} = getParams(props);
     this.state = {
-      id: id,
+      id,
+      operationsList: [],
     };
   }
 
   componentDidMount() {
-    this.fetchBarrelHandler();
+    this.fetchDataHandler();
+    this.fetchOperationsHandler();
   }
 
-  fetchBarrelHandler = async () => {
+  fetchDataHandler = async () => {
     try {
       const barrelInfo = await fetchBarrelHandler({id: this.state.id});
       this.setState({...barrelInfo});
+    } catch (e) {}
+  };
+
+  fetchOperationsHandler = async () => {
+    try {
+      const operationsList = await fetchOperationsHandler();
+      this.setState({
+        operationsList: _.filter(
+          operationsList,
+          item => item.barrel_or === this.state.id,
+        ),
+      });
     } catch (e) {}
   };
 
@@ -50,6 +70,74 @@ class BarrelDetailScreen extends Component {
         this.props.navigation.goBack();
       },
     });
+  };
+
+  deleteOperation = id => {
+    const {operationsList} = this.state;
+    this.setState({
+      operationsList: _.filter(operationsList, item => item.id !== id),
+    });
+    try {
+      deleteOperationHandler({id});
+    } catch (e) {}
+  };
+  
+  renderOperationHeader = () => {
+    return (
+      <View style={[styles.operationRowItem, styles.dividerStyle]}>
+        <Text
+          style={[
+            styles.operationTitleStyle,
+            {width: scale(30), fontWeight: 'bold'},
+          ]}>
+          #
+        </Text>
+        <Text
+          style={[
+            styles.operationInfoStyle,
+            {width: '40%', fontWeight: 'bold'},
+          ]}>
+          Data
+        </Text>
+        <Text
+          style={[
+            styles.operationInfoStyle,
+            {width: '30%', fontWeight: 'bold'},
+          ]}>
+          Tipo operatore
+        </Text>
+        <Text
+          style={[
+            styles.operationInfoStyle,
+            {textAlign: 'right', fontWeight: 'bold'},
+          ]}>
+          Elimina
+        </Text>
+      </View>
+    );
+  };
+
+  renderOperationItem = (item, index) => {
+    const {id, op_type} = item || {};
+    return (
+      <View style={[styles.operationRowItem, styles.dividerStyle]}>
+        <Text style={[styles.operationTitleStyle, {width: scale(30)}]}>
+          {index}
+        </Text>
+        <Text style={[styles.operationInfoStyle, {width: '40%'}]}>
+          {moment().format('DD MMM, YYYY')}
+        </Text>
+        <Text style={[styles.operationInfoStyle, {width: '30%'}]}>
+          {op_type}
+        </Text>
+        <IconButton
+          name={'delete'}
+          type={ICON_TYPES.AntDesign}
+          size={moderateScale(20)}
+          onPress={() => this.deleteOperation(id)}
+        />
+      </View>
+    );
   };
 
   render() {
@@ -76,6 +164,13 @@ class BarrelDetailScreen extends Component {
           </View>
           <View style={styles.dividerStyle} />
           {_.map(BARREL_DETAIL_ITEM_KEYS, item => this.renderInfoItem(item))}
+        </View>
+        <View style={styles.bottomContainer}>
+          <Text style={styles.headerTitleStyle}>Operazioni</Text>
+          {this.renderOperationHeader()}
+          {_.map(this.state.operationsList, (item, index) =>
+            this.renderOperationItem(item, index),
+          )}
         </View>
       </ScrollView>
     );
@@ -115,11 +210,38 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   infoStyle: {
-    fontSize: moderateScale(17),
     flex: 1,
+    fontSize: moderateScale(17),
   },
   dividerStyle: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  //bottom container
+  headerTitleStyle: {
+    flex: 1,
+    fontSize: moderateScale(20),
+    fontWeight: 'bold',
+  },
+  bottomContainer: {
+    width: '100%',
+    marginTop: moderateScale(10),
+    backgroundColor: Colors.white,
+    paddingHorizontal: scale(20),
+    paddingVertical: moderateScale(16),
+    borderRadius: moderateScale(6),
+  },
+  operationRowItem: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: moderateScale(12),
+  },
+  operationTitleStyle: {
+    fontSize: moderateScale(17),
+    fontWeight: 'bold',
+  },
+  operationInfoStyle: {
+    fontSize: moderateScale(17),
   },
 });

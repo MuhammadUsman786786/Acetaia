@@ -6,7 +6,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Colors} from '../Theme';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BatteryScreen from './BatteryScreen';
-import {createCompatNavigatorFactory} from '@react-navigation/compat';
 import BarrelDetailScreen from './BarrelDetailScreen';
 import OperationsScreen from './OperationsScreen';
 
@@ -29,10 +28,9 @@ const Home = () => {
       tabBarOptions={{
         activeTintColor: Colors.primary,
       }}>
-      <Tab.Screen name="Operazioni" component={OperationsScreen} />
-      <Tab.Screen name="Nuovo" component={BatteryScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
-      {/*<Tab.Screen name="Messages" component={Messages} />*/}
+      <Tab.Screen name="Nuovo" component={BatteryScreen} />
+      <Tab.Screen name="Operazioni" component={OperationsScreen} />
     </Tab.Navigator>
   );
 };

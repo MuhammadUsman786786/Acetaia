@@ -14,14 +14,15 @@ export const createBarrelIdValidation = props => {
 export const createBarrelValidation = props => {
   const {id, capacity, wood_type, vinegar_type, barrier_id, quantity, author} =
     props || {};
+  printLogs(props);
   if (
-    _.isEmpty(id) ||
-    _.isEmpty(capacity) ||
+    _.isEmpty(_.toString(id)) ||
+    _.isEmpty(_.toString(capacity)) ||
     _.isEmpty(wood_type) ||
     _.isEmpty(vinegar_type) ||
-    _.isEmpty(barrier_id) ||
-    _.isEmpty(quantity) ||
-    _.isEmpty(author)
+    _.isEmpty(_.toString(barrier_id)) ||
+    _.isEmpty(_.toString(quantity)) ||
+    _.isEmpty(_.toString(author))
   ) {
     showToast('All fields are required');
     return;
@@ -42,8 +43,8 @@ export const createOperationValidation = (formData, formId) => {
     description,
   } = formData || {};
 
-  printLogs(formData)
-  printLogs(formId)
+  printLogs(formData);
+  printLogs(formId);
   if (formId === 0 || formId === 1) {
     if (
       _.isEmpty(op_type) ||

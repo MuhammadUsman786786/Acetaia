@@ -8,6 +8,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BatteryScreen from './BatteryScreen';
 import BarrelDetailScreen from './BarrelDetailScreen';
 import OperationsScreen from './OperationsScreen';
+import {VectorIcon} from '../Components';
+import {ICON_TYPES} from '../Utilities/Constants';
+import {printLogs} from '../Config/ReactotronConfig';
+import {moderateScale} from 'react-native-size-matters';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,12 +26,31 @@ const navBarStyle = {
   },
 };
 
+const ICONS_LIST = {
+  Home: {iconType: ICON_TYPES.AntDesign, iconName: 'home'},
+  Nuovo: {iconType: ICON_TYPES.FontAwesome5, iconName: 'drum-steelpan'},
+  Operazioni: {iconType: ICON_TYPES.AntDesign, iconName: 'form'},
+};
+
 const Home = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: Colors.primary,
-      }}>
+      }}
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          const {iconType, iconName} = ICONS_LIST[route.name];
+          return (
+            <VectorIcon
+              type={iconType}
+              name={iconName}
+              size={moderateScale(20)}
+              color={color}
+            />
+          );
+        },
+      })}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Nuovo" component={BatteryScreen} />
       <Tab.Screen name="Operazioni" component={OperationsScreen} />

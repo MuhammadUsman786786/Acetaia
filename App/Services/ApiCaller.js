@@ -5,6 +5,7 @@ import {
   deleteBarrel,
   deleteBattery,
   deleteOperation,
+  editBarrel,
   getBarrel,
   getBarrels,
   getBatteries,
@@ -57,6 +58,19 @@ export const createBarrelHandler = data =>
     createBarrel(data)
       .then(response => {
         showToast('Created Successfully');
+        resolve();
+      })
+      .catch(error => {
+        showErrorMessage(error);
+        reject();
+      });
+  });
+
+export const editBarrelHandler = (data, oldId) =>
+  new Promise(function(resolve, reject) {
+    editBarrel(data, oldId)
+      .then(response => {
+        showToast('Edited Successfully');
         resolve();
       })
       .catch(error => {

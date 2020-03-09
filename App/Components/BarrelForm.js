@@ -4,7 +4,16 @@ import {CustomButton, CustomInputField} from './index';
 import {moderateScale, scale} from 'react-native-size-matters';
 import {createBarrelValidation} from '../Utils/Validation';
 import * as _ from 'lodash';
-import {createBarrelHandler} from '../Services/ApiCaller';
+import {
+  createBarrelHandler,
+  editBarrelHandler,
+  fetchBarrelHandler,
+  fetchBatteriesHandler,
+} from '../Services/ApiCaller';
+import {DROPDOWN_HEADER} from './OperationsForm';
+import {withNavigation} from '@react-navigation/compat';
+import ModalSelector from 'react-native-modal-selector';
+import modalDropDownStyle from './Styles/dropdownStyles';
 
 const INITIAL_BARREL_FORM = {
   id: '',
@@ -20,15 +29,44 @@ class BarrelForm extends Component {
     super(props);
     this.state = {
       ...INITIAL_BARREL_FORM,
+      formMode: props.formMode || 'add',
+      oldBarrelId: props.id,
+      batteriesList: [],
       author: '15',
     };
   }
+
+  componentDidMount = () => {
+    this.onPageFocus();
+    this.updateHandler();
+  };
+
+  updateHandler = async () => {
+    const {formMode} = this.state;
+    if (formMode === 'add' || _.isEmpty(formMode)) {
+      return;
+    }
+    try {
+      const barrelInfo = await fetchBarrelHandler({id: this.props.id});
+      this.setState({...barrelInfo});
+    } catch (e) {}
+  };
+
+  onPageFocus = async () => {
+    try {
+      const batteriesList = await fetchBatteriesHandler();
+      this.setState({
+        batteriesList: [...DROPDOWN_HEADER, ...batteriesList] || [],
+      });
+    } catch (e) {}
+  };
 
   onChangeText = ({valueKey, value}) => {
     this.setState({[valueKey]: value});
   };
 
   onCreateEditBarrel = async () => {
+    const {formMode, oldBarrelId} = this.state;
     const params = _.pick(this.state, [
       'id',
       'capacity',
@@ -43,25 +81,31 @@ class BarrelForm extends Component {
       return;
     }
     try {
-      await createBarrelHandler(params);
+      if (formMode === 'add') {
+        await createBarrelHandler({...params, author: '15'});
+      } else {
+        await editBarrelHandler({...params, author: '15'}, oldBarrelId);
+        this.props.onEditSuccessfull();
+      }
       this.setState({...INITIAL_BARREL_FORM});
     } catch (e) {}
   };
 
-  componentDidMount = () => {};
-
   render() {
+    const {formMode = 'add'} = this.state;
     return (
       <View style={styles.formContainer}>
         <Text style={styles.titleStyle}>Crea Barile</Text>
-        <CustomInputField
-          isBottomSpacing
-          valueKey={'id'}
-          label={'Id*'}
-          placeholder={'Barell id'}
-          value={this.state.id}
-          onChangeText={this.onChangeText}
-        />
+        {formMode === 'add' && (
+          <CustomInputField
+            isBottomSpacing
+            valueKey={'id'}
+            label={'Id*'}
+            placeholder={'Barell id'}
+            value={this.state.id}
+            onChangeText={this.onChangeText}
+          />
+        )}
         <CustomInputField
           isBottomSpacing
           valueKey={'capacity'}
@@ -86,29 +130,44 @@ class BarrelForm extends Component {
           value={this.state.vinegar_type}
           onChangeText={this.onChangeText}
         />
-        <CustomInputField
-          isBottomSpacing
-          valueKey={'barrier_id'}
-          label={'Barrier id*'}
-          placeholder={'Barrier id'}
-          value={this.state.barrier_id}
-          onChangeText={this.onChangeText}
-        />
-        <CustomInputField
-          isBottomSpacing
-          valueKey={'quantity'}
-          label={'Q.ta*'}
-          placeholder={'Quantity'}
-          value={this.state.quantity}
-          onChangeText={this.onChangeText}
-        />
+        {formMode === 'add' && (
+          <ModalSelector
+            data={this.state.batteriesList}
+            selectedKey={0}
+            cancelText={'Cancel'}
+            {...modalDropDownStyle}
+            keyExtractor={data => data.id}
+            labelExtractor={data => {
+              return !data.section
+                ? `Barrel with Id ${data.id}`
+                : 'Select Barrel Origin';
+            }}
+            onChange={item => this.setState({barrier_id: item.id})}>
+            <CustomInputField
+              isBottomSpacing
+              label={'Barrier id*'}
+              placeholder={'Barrier id'}
+              value={_.toString(this.state.barrier_id)}
+            />
+          </ModalSelector>
+        )}
+        {formMode === 'add' && (
+          <CustomInputField
+            isBottomSpacing
+            valueKey={'quantity'}
+            label={'Q.ta*'}
+            placeholder={'Quantity'}
+            value={this.state.quantity}
+            onChangeText={this.onChangeText}
+          />
+        )}
         <CustomButton title={'Crea'} onPress={this.onCreateEditBarrel} />
       </View>
     );
   }
 }
 
-export default BarrelForm;
+export default withNavigation(BarrelForm);
 const styles = StyleSheet.create({
   formContainer: {
     paddingHorizontal: scale(10),

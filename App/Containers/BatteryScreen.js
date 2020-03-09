@@ -74,7 +74,7 @@ class BatteryScreen extends Component {
   render() {
     const {isBarrelIdForm, isBarrelForm} = this.state;
     return (
-      <InputScrollView>
+      <InputScrollView keyboardShouldPersistTaps={true}>
         <ToggleItem
           title={'Barriera'}
           isDivider

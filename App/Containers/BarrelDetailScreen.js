@@ -14,7 +14,7 @@ import {showAlert} from '../Utils/UiUtils';
 import {Colors} from '../Theme';
 import moment from 'moment';
 import * as _ from 'lodash';
-import {printLogs} from '../Config/ReactotronConfig';
+import {BarrelForm} from '../Components';
 
 class BarrelDetailScreen extends Component {
   constructor(props) {
@@ -23,6 +23,8 @@ class BarrelDetailScreen extends Component {
     this.state = {
       id,
       operationsList: [],
+      barrelInfo: {},
+      isEditForm: false,
     };
   }
 
@@ -31,10 +33,14 @@ class BarrelDetailScreen extends Component {
     this.fetchOperationsHandler();
   }
 
+  toggleEditForm = () => {
+    this.setState({isEditForm: !this.state.isEditForm});
+  };
+
   fetchDataHandler = async () => {
     try {
       const barrelInfo = await fetchBarrelHandler({id: this.state.id});
-      this.setState({...barrelInfo});
+      this.setState({...barrelInfo, barrelInfo});
     } catch (e) {}
   };
 
@@ -81,7 +87,7 @@ class BarrelDetailScreen extends Component {
       deleteOperationHandler({id});
     } catch (e) {}
   };
-  
+
   renderOperationHeader = () => {
     return (
       <View style={[styles.operationRowItem, styles.dividerStyle]}>
@@ -118,14 +124,14 @@ class BarrelDetailScreen extends Component {
   };
 
   renderOperationItem = (item, index) => {
-    const {id, op_type} = item || {};
+    const {date, id, op_type} = item || {};
     return (
       <View style={[styles.operationRowItem, styles.dividerStyle]}>
         <Text style={[styles.operationTitleStyle, {width: scale(30)}]}>
           {index}
         </Text>
         <Text style={[styles.operationInfoStyle, {width: '40%'}]}>
-          {moment().format('DD MMM, YYYY')}
+          {moment(date).format('DD MMM, YYYY')}
         </Text>
         <Text style={[styles.operationInfoStyle, {width: '30%'}]}>
           {op_type}
@@ -140,7 +146,13 @@ class BarrelDetailScreen extends Component {
     );
   };
 
+  onEditSuccessfull = () => {
+    this.fetchDataHandler();
+    this.toggleEditForm();
+  };
+
   render() {
+    const {isEditForm} = this.state;
     return (
       <ScrollView style={styles.container}>
         <View style={styles.topContainer}>
@@ -153,6 +165,7 @@ class BarrelDetailScreen extends Component {
               type={ICON_TYPES.Entypo}
               size={moderateScale(24)}
               color={Colors.black}
+              onPress={this.toggleEditForm}
             />
             <IconButton
               name={'delete'}
@@ -162,6 +175,14 @@ class BarrelDetailScreen extends Component {
               onPress={this.onDeleteBarrel}
             />
           </View>
+          {isEditForm && (
+            <BarrelForm
+              formMode={'edit'}
+              barrelInfo={this.state.barrelInfo}
+              id={this.state.id}
+              onEditSuccessfull={this.onEditSuccessfull}
+            />
+          )}
           <View style={styles.dividerStyle} />
           {_.map(BARREL_DETAIL_ITEM_KEYS, item => this.renderInfoItem(item))}
         </View>

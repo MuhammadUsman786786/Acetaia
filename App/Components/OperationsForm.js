@@ -9,7 +9,6 @@ import {
   createOperationHandler,
   fetchBarrelsHandler,
 } from '../Services/ApiCaller';
-import {printLogs} from '../Config/ReactotronConfig';
 import ModalSelector from 'react-native-modal-selector';
 import {createOperationValidation} from '../Utils/Validation';
 
@@ -21,8 +20,8 @@ const INITIAL_OPERATIONS_FORM = {
   barrel_or: '',
   barrel_dest: '',
   quantity: '',
-  measure_type: '',
-  measured_value: '',
+  mis_type: '',
+  mis_value: '',
   description: '',
 };
 
@@ -87,28 +86,26 @@ class OperationsForm extends Component {
           value={this.state.vinegar_type}
           onChangeText={this.onChangeText}
         />
-        {!_.isEmpty(barrelsList) && (
-          <ModalSelector
-            data={this.state.barrelsList}
-            selectedKey={0}
-            cancelText={'Cancel'}
-            {...modalDropDownStyle}
-            keyExtractor={data => data.id}
-            labelExtractor={data => {
-              return !data.section
-                ? `Barrel with Id ${data.id}`
-                : 'Select Barrel Origin';
-            }}
-            onChange={item => this.setState({barrel_or: item.id})}>
-            <CustomInputField
-              isBottomSpacing
-              label={'Barrel of Origin*'}
-              placeholder={'Barrel of Origin'}
-              value={_.toString(this.state.barrel_or)}
-            />
-          </ModalSelector>
-        )}
-        {formId === 2 && !_.isEmpty(barrelsList) && (
+        <ModalSelector
+          data={this.state.barrelsList}
+          selectedKey={0}
+          cancelText={'Cancel'}
+          {...modalDropDownStyle}
+          keyExtractor={data => data.id}
+          labelExtractor={data => {
+            return !data.section
+              ? `Barrel with Id ${data.id}`
+              : 'Select Barrel Origin';
+          }}
+          onChange={item => this.setState({barrel_or: item.id})}>
+          <CustomInputField
+            isBottomSpacing
+            label={'Barrel of Origin*'}
+            placeholder={'Barrel of Origin'}
+            value={_.toString(this.state.barrel_or)}
+          />
+        </ModalSelector>
+        {formId === 2 && (
           <ModalSelector
             data={this.state.barrelsList}
             selectedKey={0}
@@ -143,20 +140,20 @@ class OperationsForm extends Component {
         {formId === 3 && (
           <CustomInputField
             isBottomSpacing
-            valueKey={'measure_type'}
+            valueKey={'mis_type'}
             label={'Measurement Type*'}
             placeholder={'Measurement Type'}
-            value={this.state.measure_type}
+            value={this.state.mis_type}
             onChangeText={this.onChangeText}
           />
         )}
         {formId === 3 && (
           <CustomInputField
             isBottomSpacing
-            valueKey={'measured_value'}
+            valueKey={'mis_value'}
             label={'Measurement Value*'}
             placeholder={'Measurement Value'}
-            value={this.state.measured_value}
+            value={this.state.mis_value}
             onChangeText={this.onChangeText}
           />
         )}

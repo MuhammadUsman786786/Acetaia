@@ -3,6 +3,7 @@ import {StyleSheet, Text, TextInput, View, ViewPropTypes} from 'react-native';
 import PropTypes from 'prop-types';
 import {Colors} from '../Theme';
 import {moderateScale, scale} from 'react-native-size-matters';
+import * as _ from 'lodash';
 
 const CustomInputField = props => {
   const {container = {}} = props;
@@ -27,7 +28,7 @@ const CustomInputField = props => {
       <View
         style={[styles.container, bottomSpacing, container, {borderRadius}]}>
         <TextInput
-          value={value}
+          value={_.toString(value)}
           placeholder={placeholder}
           multiline={multiline}
           editable={isEditable}
@@ -35,7 +36,7 @@ const CustomInputField = props => {
           selectionColor={Colors.yellow}
           secureTextEntry={secureTextEntry}
           placeholderTextColor={placeholderTextColor}
-          keyboardType={props.keyboardType||'default'}
+          keyboardType={props.keyboardType || 'default'}
           onChangeText={currentValue =>
             onChangeText({valueKey, value: currentValue})
           }

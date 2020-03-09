@@ -12,6 +12,8 @@ export const createBattery = data =>
 export const getBarrel = data => axios.get(`${BASE_URL}/barili/api/${data.id}`);
 export const getBarrels = () => axios.get(`${BASE_URL}/barili/api/`);
 export const createBarrel = data => axios.post(`${BASE_URL}/barili/api/`, data);
+export const editBarrel = (data, oldId) =>
+  axios.put(`${BASE_URL}/barili/api/${oldId}/`, data);
 export const deleteBarrel = data =>
   axios.delete(`${BASE_URL}/barili/api/${data.id}/`);
 

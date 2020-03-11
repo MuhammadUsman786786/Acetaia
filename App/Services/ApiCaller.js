@@ -66,11 +66,17 @@ export const createBarrelHandler = data =>
       });
   });
 
-export const editBarrelHandler = (data, oldId) =>
+export const editBarrelHandler = (
+  data,
+  oldId,
+  message = 'Edited Successfully',
+) =>
   new Promise(function(resolve, reject) {
     editBarrel(data, oldId)
       .then(response => {
-        showToast('Edited Successfully');
+        if (!_.isEmpty(message)) {
+          showToast(message);
+        }
         resolve();
       })
       .catch(error => {

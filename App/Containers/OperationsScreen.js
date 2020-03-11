@@ -4,13 +4,13 @@ import CheckBox from '../Library/CustomCheckbox';
 import {moderateScale, scale} from 'react-native-size-matters';
 import OperatoinsForm from '../Components/OperationsForm';
 import InputScrollView from 'react-native-input-scroll-view';
-const FORM_LABELS=[
+const FORM_LABELS = [
   'Aggiunta',
   'Prelievo',
   'Rabbocco',
   'Misurazione',
   'Degustazione',
-]
+];
 class OperationsScreen extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +33,7 @@ class OperationsScreen extends Component {
   };
 
   render() {
-    const {currentFormIndex}=this.state
+    const {currentFormIndex} = this.state;
     return (
       <InputScrollView>
         <View style={styles.container}>
@@ -42,7 +42,10 @@ class OperationsScreen extends Component {
           {this.renderCheckBox(2, FORM_LABELS[2])}
           {this.renderCheckBox(3, FORM_LABELS[3])}
           {this.renderCheckBox(4, FORM_LABELS[4])}
-          <OperatoinsForm formId={currentFormIndex} formLabel={FORM_LABELS[currentFormIndex]}/>
+          <OperatoinsForm
+            formId={currentFormIndex}
+            formLabel={FORM_LABELS[currentFormIndex]}
+          />
         </View>
       </InputScrollView>
     );

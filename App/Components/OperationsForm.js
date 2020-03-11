@@ -7,10 +7,12 @@ import modalDropDownStyle from './Styles/dropdownStyles';
 import * as _ from 'lodash';
 import {
   createOperationHandler,
+  editBarrelHandler,
   fetchBarrelsHandler,
 } from '../Services/ApiCaller';
 import ModalSelector from 'react-native-modal-selector';
 import {createOperationValidation} from '../Utils/Validation';
+import {printLogs} from '../Config/ReactotronConfig';
 
 export const DROPDOWN_HEADER = [{section: true, id: 'Select User Type'}];
 
@@ -40,15 +42,39 @@ class OperationsForm extends Component {
   };
 
   onCreateOperation = async () => {
-    const {params, isValid} = createOperationValidation(
+    const {
+      params,
+      isValid,
+      sourceBarrelObject = {},
+      destinationBarrelObject = {},
+    } = createOperationValidation(
       this.state,
       this.props.formId,
+      this.state.barrelsList,
     );
     if (!isValid) {
       return;
     }
     try {
-      await createOperationHandler(params);
+      await createOperationHandler(params, sourceBarrelObject);
+      if (!_.isEmpty(sourceBarrelObject)) {
+        printLogs('called1')
+        await editBarrelHandler(sourceBarrelObject, sourceBarrelObject.id, '');
+      }
+      if (!_.isEmpty(destinationBarrelObject)) {
+        await editBarrelHandler(
+          destinationBarrelObject,
+          destinationBarrelObject.id,
+          '',
+        );
+      }
+      if (
+        !_.isEmpty(sourceBarrelObject) ||
+        !_.isEmpty(destinationBarrelObject)
+      ) {
+        printLogs('focus');
+        await this.onPageFocus();
+      }
       this.setState({...INITIAL_OPERATIONS_FORM});
     } catch (e) {}
   };

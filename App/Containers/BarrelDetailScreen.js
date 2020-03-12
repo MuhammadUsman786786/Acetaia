@@ -14,7 +14,7 @@ import {showAlert} from '../Utils/UiUtils';
 import {Colors} from '../Theme';
 import moment from 'moment';
 import * as _ from 'lodash';
-import {BarrelForm} from '../Components';
+import {BarrelForm, OperationListItem} from '../Components';
 
 class BarrelDetailScreen extends Component {
   constructor(props) {
@@ -124,25 +124,12 @@ class BarrelDetailScreen extends Component {
   };
 
   renderOperationItem = (item, index) => {
-    const {date, id, op_type} = item || {};
     return (
-      <View style={[styles.operationRowItem, styles.dividerStyle]}>
-        <Text style={[styles.operationTitleStyle, {width: scale(30)}]}>
-          {index}
-        </Text>
-        <Text style={[styles.operationInfoStyle, {width: '40%'}]}>
-          {moment(date).format('DD MMM, YYYY')}
-        </Text>
-        <Text style={[styles.operationInfoStyle, {width: '30%'}]}>
-          {op_type}
-        </Text>
-        <IconButton
-          name={'delete'}
-          type={ICON_TYPES.AntDesign}
-          size={moderateScale(20)}
-          onPress={() => this.deleteOperation(id)}
-        />
-      </View>
+      <OperationListItem
+        item={item}
+        index={index}
+        onPress={this.deleteOperation}
+      />
     );
   };
 

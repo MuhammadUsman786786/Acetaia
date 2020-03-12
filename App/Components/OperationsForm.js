@@ -17,13 +17,13 @@ import {printLogs} from '../Config/ReactotronConfig';
 export const DROPDOWN_HEADER = [{section: true, id: 'Select User Type'}];
 
 const INITIAL_OPERATIONS_FORM = {
-  op_type: '',
-  vinegar_type: '',
+  op_type: 'op_type',
+  vinegar_type: 'vinegar_type',
   barrel_or: '',
   barrel_dest: '',
   quantity: '',
-  mis_type: '',
-  mis_value: '',
+  mis_type: 'mt',
+  mis_value: '0',
   description: '',
 };
 
@@ -75,7 +75,7 @@ class OperationsForm extends Component {
         printLogs('focus');
         await this.onPageFocus();
       }
-      this.setState({...INITIAL_OPERATIONS_FORM});
+      // this.setState({...INITIAL_OPERATIONS_FORM});
     } catch (e) {}
   };
 
@@ -146,8 +146,8 @@ class OperationsForm extends Component {
             onChange={item => this.setState({barrel_dest: item.id})}>
             <CustomInputField
               isBottomSpacing
-              label={'Barrel of Origin*'}
-              placeholder={'Barrel of Origin'}
+              label={'Barrel of Destination*'}
+              placeholder={'Barrel of Destination'}
               value={_.toString(this.state.barrel_dest)}
             />
           </ModalSelector>
@@ -180,6 +180,7 @@ class OperationsForm extends Component {
             label={'Measurement Value*'}
             placeholder={'Measurement Value'}
             value={this.state.mis_value}
+            keyboardType={'numeric'}
             onChangeText={this.onChangeText}
           />
         )}

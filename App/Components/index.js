@@ -6,6 +6,7 @@ import CustomInputField from './CustomInputField';
 import CustomButton from './CustomButton';
 import BarrelForm from './BarrelForm';
 import OperationsForm from './OperationsForm';
+import OperationListItem from './OperationListItem';
 
 export {
   VectorIcon,
@@ -15,5 +16,6 @@ export {
   CustomInputField,
   CustomButton,
   BarrelForm,
-  OperationsForm
+  OperationsForm,
+  OperationListItem
 };

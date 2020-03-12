@@ -91,14 +91,8 @@ export const thirdOperationValidationHandler = (
   formId,
   barrelsList,
 ) => {
-  const {
-    op_type,
-    vinegar_type,
-    barrel_or,
-    barrel_dest,
-    operator,
-    quantity
-  } = formData || {};
+  const {op_type, vinegar_type, barrel_or, barrel_dest, operator, quantity} =
+    formData || {};
   if (
     _.isEmpty(op_type) ||
     _.isEmpty(vinegar_type) ||
@@ -132,7 +126,7 @@ export const thirdOperationValidationHandler = (
     showToast('Destination is full');
     return {isValid: false};
   }
-  
+
   return {
     isValid: true,
     params: {
@@ -165,18 +159,35 @@ export const forthOperationValidationHandler = (
     barrel_or,
     operator,
     quantity,
-    measure_type,
-    measured_value,
+    mis_type,
+    mis_value,
   } = formData || {};
 
+  printLogs({
+    op_type: _.isEmpty(op_type),
+    vinegar_type: _.isEmpty(vinegar_type),
+    barrel_or: _.isEmpty(_.toString(barrel_or)),
+    operator: _.isEmpty(operator),
+    mis_type: _.isEmpty(mis_type),
+    mis_value: _.isEmpty(mis_value),
+    quantity: _.isEmpty(_.toString(quantity)),
+  });
+  printLogs({
+    op_type,
+    vinegar_type,
+    barrel_or,
+    operator,
+    mis_type,
+    mis_value,
+    quantity,
+  });
   if (
     _.isEmpty(op_type) ||
     _.isEmpty(vinegar_type) ||
     _.isEmpty(_.toString(barrel_or)) ||
     _.isEmpty(operator) ||
-    _.isEmpty(measure_type) ||
-    _.isEmpty(measured_value) ||
-    _.isEmpty(_.toString(quantity))
+    _.isEmpty(mis_type) ||
+    _.isEmpty(mis_value)
   ) {
     showToast('All fields are required');
     return {isValid: false};
@@ -188,20 +199,21 @@ export const forthOperationValidationHandler = (
       vinegar_type,
       barrel_or,
       operator,
-      quantity,
-      measure_type,
-      measured_value,
+      mis_type,
+      mis_value,
     },
   };
 };
 
 const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
-  const {op_type, vinegar_type, barrel_or, description} = formData || {};
+  const {op_type, vinegar_type, barrel_or, description, operator} =
+    formData || {};
   if (
     _.isEmpty(op_type) ||
     _.isEmpty(vinegar_type) ||
     _.isEmpty(_.toString(barrel_or)) ||
-    _.isEmpty(_.toString(description))
+    _.isEmpty(_.toString(description)) ||
+    _.isEmpty(operator)
   ) {
     showToast('All fields are required');
     return {isValid: false};
@@ -213,6 +225,7 @@ const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
       vinegar_type,
       barrel_or,
       description,
+      operator,
     },
   };
 };

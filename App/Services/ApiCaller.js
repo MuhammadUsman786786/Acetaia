@@ -10,10 +10,52 @@ import {
   getBarrels,
   getBatteries,
   getOperations,
+  login,
+  setAuthToken,
+  signUp,
 } from './Api';
 import * as _ from 'lodash';
 import {showToast} from '../Utils/UiUtils';
+import {setStorageItem, STORAGE_KEYS} from '../Utils/storage';
+import {NavigationService} from './NavigatorServices';
 import {printLogs} from '../Config/ReactotronConfig';
+
+//user
+export const loginHandler = data =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const apiResponse = await login(data);
+      const {data: responseData = {}} = apiResponse || {};
+      const {token} = responseData || {};
+      if (_.isEmpty(token)) {
+        showToast('Error is found');
+        reject();
+      }
+      setAuthToken(token);
+      await setStorageItem(STORAGE_KEYS.TOKEN, token);
+      NavigationService.resetAndNavigate('Acetaia');
+      resolve();
+    } catch (error) {
+      showErrorMessage(error);
+      reject(e);
+    }
+  });
+
+export const signUpHandler = data =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const apiResponse = await signUp(data);
+      const {data: responseData = {}} = apiResponse || {};
+      printLogs(apiResponse);
+      printLogs(responseData);
+      showToast('Signup Successfully');
+      NavigationService.goBack();
+      resolve();
+    } catch (error) {
+      showErrorMessage(error);
+      reject(e);
+    }
+  });
 
 // batteries
 export const fetchBatteriesHandler = () =>
@@ -23,7 +65,8 @@ export const fetchBatteriesHandler = () =>
         const {data = []} = response || {};
         resolve(data || []);
       })
-      .catch(() => {
+      .catch(error => {
+        showErrorMessage(error);
         reject();
       });
   });
@@ -92,7 +135,8 @@ export const fetchBarrelsHandler = () =>
         const {data = []} = response || {};
         resolve(data || []);
       })
-      .catch(() => {
+      .catch(error => {
+        showErrorMessage(error);
         reject();
       });
   });
@@ -104,7 +148,8 @@ export const fetchBarrelHandler = params =>
         const {data = []} = response || {};
         resolve(data || []);
       })
-      .catch(() => {
+      .catch(error => {
+        showErrorMessage(error);
         reject();
       });
   });
@@ -166,7 +211,17 @@ const showErrorMessage = errorObj => {
     showToast('Network error is found');
     return;
   }
-  const {response: {data = []} = {}} = errorObj || {};
+  const {response: {data = [], status} = {}} = errorObj || {};
+  if (status === '401' || status === 401) {
+    NavigationService.resetAndNavigate('SignInScreen');
+  }
+  if (_.isObject(data)) {
+    const errorMessage = _.get(data, 'detail', '');
+    if (_.isString(errorMessage) && !_.isEmpty(errorMessage)) {
+      showToast(errorMessage);
+      return;
+    }
+  }
   const errorKeys = _.keys(data);
   const errorMessage = _.get(data, `${errorKeys[0]}[0]`);
 

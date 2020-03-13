@@ -10,8 +10,10 @@ import BarrelDetailScreen from './BarrelDetailScreen';
 import OperationsScreen from './OperationsScreen';
 import {VectorIcon} from '../Components';
 import {ICON_TYPES} from '../Utilities/Constants';
-import {printLogs} from '../Config/ReactotronConfig';
 import {moderateScale} from 'react-native-size-matters';
+import SignInScreen from './SignInScreen';
+import {navigationRef} from '../Services/NavigatorServices';
+import SignUpScreen from './SignUpScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,10 +65,20 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator
           // initialRouteName={'BarrelDetailScreen'}
           >
+            <Stack.Screen
+              name="SignInScreen"
+              component={SignInScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="SignUpScreen"
+              component={SignUpScreen}
+              options={{headerShown: false}}
+            />
             <Stack.Screen
               name="Acetaia"
               component={Home}

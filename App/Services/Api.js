@@ -1,6 +1,21 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8000';
+
+export const setAuthToken = token => {
+  axios.defaults.headers.common.Authorization = '';
+  delete axios.defaults.headers.common.Authorization;
+
+  if (token) {
+    axios.defaults.headers.common.Authorization = `${token}`;
+  }
+};
+
+//user
+export const login = data => axios.post(`${BASE_URL}/user/auth/login/`, data);
+export const signUp = data =>
+  axios.post(`${BASE_URL}/user/auth/register/`, data);
+
 //batteries
 export const getBatteries = () => axios.get(`${BASE_URL}/batterie/api/`);
 export const deleteBattery = data =>

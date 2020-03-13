@@ -248,3 +248,26 @@ export const createOperationValidation = (
   }
   return {isValid: false};
 };
+
+export const signUpValidation = props => {
+  const {username, password, confirmPassword} = props || {};
+  if (
+    _.isEmpty(username) ||
+    _.isEmpty(password) ||
+    _.isEmpty(confirmPassword)
+  ) {
+    showToast('All fields are required');
+    return false;
+  }
+
+  if (password !== confirmPassword) {
+    showToast('Passwords not matches');
+    return false;
+  }
+
+  if (_.size(password) < 8) {
+    showToast('Password must be greater then 8 digits');
+    return false;
+  }
+  return true;
+};

@@ -7,7 +7,7 @@ import {moderateScale} from 'react-native-size-matters';
 
 const CustomButton = props => {
   return (
-    <Button style={styles.container} shadowless onPress={props.onPress}>
+    <Button style={[styles.container,props.container]} shadowless onPress={props.onPress}>
       {props.title}
     </Button>
   );

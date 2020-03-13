@@ -75,7 +75,7 @@ class OperationsForm extends Component {
         printLogs('focus');
         await this.onPageFocus();
       }
-      // this.setState({...INITIAL_OPERATIONS_FORM});
+      this.setState({...INITIAL_OPERATIONS_FORM});
     } catch (e) {}
   };
 

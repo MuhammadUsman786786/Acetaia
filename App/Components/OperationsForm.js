@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {CustomButton, CustomInputField} from './index';
 import {moderateScale, scale} from 'react-native-size-matters';
 import {withNavigation} from '@react-navigation/compat';
@@ -13,7 +13,9 @@ import {
 import ModalSelector from 'react-native-modal-selector';
 import {createOperationValidation} from '../Utils/Validation';
 import {printLogs} from '../Config/ReactotronConfig';
-import {getAsyncStorageItem, STORAGE_KEYS} from '../Utils/storage';
+import {ICON_TYPES} from '../Utilities/Constants';
+import IconButton from './IconButton';
+import {loadImageHandler} from '../Utils/ImageUtils';
 
 export const DROPDOWN_HEADER = [{section: true, id: 'Select User Type'}];
 
@@ -26,6 +28,8 @@ const INITIAL_OPERATIONS_FORM = {
   mis_type: 'mt',
   mis_value: '0',
   description: '',
+  isLoadImage: false,
+  uploadedImage: {},
 };
 
 class OperationsForm extends Component {
@@ -90,6 +94,12 @@ class OperationsForm extends Component {
         barrelsList: [...DROPDOWN_HEADER, ...(barrelsList || [])] || [],
       });
     } catch (e) {}
+  };
+
+  showLoadImageBottomSheet = () => {
+    loadImageHandler(async uploadedImage => {
+      this.setState({uploadedImage, isLoadImage: true});
+    });
   };
 
   render() {
@@ -195,6 +205,23 @@ class OperationsForm extends Component {
             onChangeText={this.onChangeText}
           />
         )}
+        {formId === 4 && (
+          <View>
+            <Text style={styles.labelStyle}>{'Upload Image*'}</Text>
+            <IconButton
+              name={'image'}
+              type={ICON_TYPES.Entypo}
+              size={moderateScale(20)}
+              onPress={this.showLoadImageBottomSheet}
+            />
+          </View>
+        )}
+        {formId === 4 && this.state.isLoadImage && (
+          <Image
+            style={styles.operationImageStyle}
+            source={this.state.uploadedImage}
+          />
+        )}
         <CustomButton title={'Crea'} onPress={this.onCreateOperation} />
       </View>
     );
@@ -213,5 +240,17 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(20),
     marginTop: moderateScale(20),
     marginBottom: moderateScale(20),
+  },
+  operationImageStyle: {
+    resizeMode: 'cover',
+    width: moderateScale(120),
+    height: moderateScale(120),
+    borderRadius: moderateScale(6),
+    marginTop: moderateScale(10),
+    marginBottom: moderateScale(20),
+  },
+  labelStyle: {
+    fontSize: moderateScale(15),
+    // marginBottom: moderateScale(5),
   },
 });

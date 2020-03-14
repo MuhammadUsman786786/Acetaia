@@ -196,7 +196,8 @@ export const forthOperationValidationHandler = (
 };
 
 const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
-  const {op_type, vinegar_type, barrel_or, description} = formData || {};
+  const {op_type, vinegar_type, barrel_or, description, isLoadImage} =
+    formData || {};
   if (
     _.isEmpty(op_type) ||
     _.isEmpty(vinegar_type) ||
@@ -204,6 +205,10 @@ const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
     _.isEmpty(_.toString(description))
   ) {
     showToast('All fields are required');
+    return {isValid: false};
+  }
+  if (!isLoadImage) {
+    showToast('Image is required');
     return {isValid: false};
   }
   return {

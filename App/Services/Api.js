@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000';
+export const BASE_URL = 'http://localhost:8000';
 
 export const setAuthToken = token => {
   axios.defaults.headers.common.Authorization = '';
   delete axios.defaults.headers.common.Authorization;
 
   if (token) {
-    axios.defaults.headers.common.Authorization = `${token}`;
+    axios.defaults.headers.common.Authorization = `token ${token}`;
   }
 };
 

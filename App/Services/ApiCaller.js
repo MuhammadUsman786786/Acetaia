@@ -1,4 +1,5 @@
 import {
+  BASE_URL,
   createBarrel,
   createBattery,
   createOperation,
@@ -16,7 +17,11 @@ import {
 } from './Api';
 import * as _ from 'lodash';
 import {showToast} from '../Utils/UiUtils';
-import {setStorageItem, STORAGE_KEYS} from '../Utils/storage';
+import {
+  getAsyncStorageItem,
+  setStorageItem,
+  STORAGE_KEYS,
+} from '../Utils/storage';
 import {NavigationService} from './NavigatorServices';
 import {printLogs} from '../Config/ReactotronConfig';
 
@@ -26,18 +31,32 @@ export const loginHandler = data =>
     try {
       const apiResponse = await login(data);
       const {data: responseData = {}} = apiResponse || {};
-      const {token} = responseData || {};
+      const {token, user} = responseData || {};
       if (_.isEmpty(token)) {
         showToast('Error is found');
         reject();
       }
       setAuthToken(token);
       await setStorageItem(STORAGE_KEYS.TOKEN, token);
+      await setStorageItem(STORAGE_KEYS.USER_ID, _.toString(user));
       NavigationService.resetAndNavigate('Acetaia');
       resolve();
     } catch (error) {
       showErrorMessage(error);
-      reject(e);
+      reject(error);
+    }
+  });
+
+export const logoutHandler = data =>
+  new Promise(async (resolve, reject) => {
+    try {
+      setAuthToken('');
+      await setStorageItem(STORAGE_KEYS.TOKEN, '');
+      await setStorageItem(STORAGE_KEYS.USER_ID, '');
+      NavigationService.resetAndNavigate('SignInScreen');
+      resolve();
+    } catch (error) {
+      showErrorMessage(error);
     }
   });
 
@@ -46,14 +65,12 @@ export const signUpHandler = data =>
     try {
       const apiResponse = await signUp(data);
       const {data: responseData = {}} = apiResponse || {};
-      printLogs(apiResponse);
-      printLogs(responseData);
       showToast('Signup Successfully');
       NavigationService.goBack();
       resolve();
     } catch (error) {
       showErrorMessage(error);
-      reject(e);
+      reject(error);
     }
   });
 
@@ -83,7 +100,7 @@ export const deleteBatteryHandler = data =>
   });
 
 export const createBatteryHandler = data =>
-  new Promise(function(resolve, reject) {
+  new Promise(async function(resolve, reject) {
     createBattery(data)
       .then(response => {
         showToast('Created Successfully');
@@ -97,7 +114,7 @@ export const createBatteryHandler = data =>
 
 //barrels
 export const createBarrelHandler = data =>
-  new Promise(function(resolve, reject) {
+  new Promise(async function(resolve, reject) {
     createBarrel(data)
       .then(response => {
         showToast('Created Successfully');
@@ -142,16 +159,22 @@ export const fetchBarrelsHandler = () =>
   });
 
 export const fetchBarrelHandler = params =>
-  new Promise(function(resolve, reject) {
-    getBarrel(params)
+  new Promise(async function(resolve, reject) {
+    // eslint-disable-next-line no-undef
+    const myHeaders = new Headers();
+    const token = await getAsyncStorageItem(STORAGE_KEYS.TOKEN);
+    myHeaders.append('Authorization', `token ${token}`);
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+    fetch(`${BASE_URL}/barili/api/${params.id}/`, requestOptions)
+      .then(resp => resp.json())
       .then(response => {
-        const {data = []} = response || {};
-        resolve(data || []);
+        resolve(response);
       })
-      .catch(error => {
-        showErrorMessage(error);
-        reject();
-      });
+      .then(result => reject());
   });
 
 export const deleteBarrelHandler = params =>
@@ -205,7 +228,7 @@ export const deleteOperationHandler = data =>
   });
 
 //error handler
-const showErrorMessage = errorObj => {
+const showErrorMessage = async errorObj => {
   const {message} = errorObj || {};
   if (message === 'Network Error') {
     showToast('Network error is found');
@@ -214,6 +237,8 @@ const showErrorMessage = errorObj => {
   const {response: {data = [], status} = {}} = errorObj || {};
   if (status === '401' || status === 401) {
     NavigationService.resetAndNavigate('SignInScreen');
+    await setStorageItem(STORAGE_KEYS.TOKEN, '');
+    await setStorageItem(STORAGE_KEYS.USER_ID, '');
   }
   if (_.isObject(data)) {
     const errorMessage = _.get(data, 'detail', '');

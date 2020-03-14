@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import moment from 'moment';
 import {withNavigation} from '@react-navigation/compat';
+import {printLogs} from '../Config/ReactotronConfig';
+import {isBarrelDeleteable} from '../Utils/Transform';
 
 const BarrelsList = withNavigation(props => {
   const {barrelsList = []} = props || {};
@@ -36,17 +38,20 @@ const BarrelsList = withNavigation(props => {
 });
 
 const BatteryItem = props => {
-  const {id, barrelsList = []} = props || {};
+  const {id, user, currentUserId, barrelsList = []} = props || {};
+  const isBarrelDelete = isBarrelDeleteable(user, barrelsList, currentUserId);
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.titleStyle}>Batteria ID: {id}</Text>
-        <IconButton
-          name={'delete'}
-          type={ICON_TYPES.AntDesign}
-          size={moderateScale(20)}
-          onPress={() => props.deleteHandler({id: id})}
-        />
+        {isBarrelDelete && (
+          <IconButton
+            name={'delete'}
+            type={ICON_TYPES.AntDesign}
+            size={moderateScale(20)}
+            onPress={() => props.deleteHandler({id: id})}
+          />
+        )}
       </View>
       {!_.isEmpty(barrelsList) && <BarrelsList {...props} />}
     </View>

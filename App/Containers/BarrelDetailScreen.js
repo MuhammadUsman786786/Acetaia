@@ -15,6 +15,7 @@ import {Colors} from '../Theme';
 import moment from 'moment';
 import * as _ from 'lodash';
 import {BarrelForm, OperationListItem} from '../Components';
+import {getAsyncStorageItem, STORAGE_KEYS} from '../Utils/storage';
 
 class BarrelDetailScreen extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class BarrelDetailScreen extends Component {
       operationsList: [],
       barrelInfo: {},
       isEditForm: false,
+      currentUserId: '',
     };
   }
 
@@ -40,7 +42,8 @@ class BarrelDetailScreen extends Component {
   fetchDataHandler = async () => {
     try {
       const barrelInfo = await fetchBarrelHandler({id: this.state.id});
-      this.setState({...barrelInfo, barrelInfo});
+      const currentUserId = await getAsyncStorageItem(STORAGE_KEYS.USER_ID);
+      this.setState({...barrelInfo, currentUserId});
     } catch (e) {}
   };
 
@@ -129,6 +132,7 @@ class BarrelDetailScreen extends Component {
         item={item}
         index={index}
         onPress={this.deleteOperation}
+        currentUserId={this.state.currentUserId}
       />
     );
   };
@@ -140,6 +144,9 @@ class BarrelDetailScreen extends Component {
 
   render() {
     const {isEditForm} = this.state;
+    const {currentUserId, author} = this.state;
+    const formattedAuthorId = _.toString(author);
+    const isMyBarrel = currentUserId === formattedAuthorId;
     return (
       <ScrollView style={styles.container}>
         <View style={styles.topContainer}>
@@ -147,20 +154,24 @@ class BarrelDetailScreen extends Component {
             {moment().format('MMMM DD, YYYY')}
           </Text>
           <View style={styles.actionButtonContainer}>
-            <IconButton
-              name={'edit'}
-              type={ICON_TYPES.Entypo}
-              size={moderateScale(24)}
-              color={Colors.black}
-              onPress={this.toggleEditForm}
-            />
-            <IconButton
-              name={'delete'}
-              type={ICON_TYPES.AntDesign}
-              size={moderateScale(24)}
-              color={Colors.black}
-              onPress={this.onDeleteBarrel}
-            />
+            {isMyBarrel && (
+              <IconButton
+                name={'edit'}
+                type={ICON_TYPES.Entypo}
+                size={moderateScale(24)}
+                color={Colors.black}
+                onPress={this.toggleEditForm}
+              />
+            )}
+            {isMyBarrel && (
+              <IconButton
+                name={'delete'}
+                type={ICON_TYPES.AntDesign}
+                size={moderateScale(24)}
+                color={Colors.black}
+                onPress={this.onDeleteBarrel}
+              />
+            )}
           </View>
           {isEditForm && (
             <BarrelForm

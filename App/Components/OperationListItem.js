@@ -16,7 +16,7 @@ const CollapseableItem = (props = {}) => {
   );
 };
 const OperationListItem = props => {
-  const {index, item} = props || {};
+  const {index, currentUserId, item} = props || {};
   const {onPress} = props || {};
   const {
     date,
@@ -45,12 +45,14 @@ const OperationListItem = props => {
         <Text style={[styles.operationInfoStyle, {width: '30%'}]}>
           {op_type}
         </Text>
-        <IconButton
-          name={'delete'}
-          type={ICON_TYPES.AntDesign}
-          size={moderateScale(20)}
-          onPress={() => onPress(id)}
-        />
+        {_.toString(operator) === currentUserId && (
+          <IconButton
+            name={'delete'}
+            type={ICON_TYPES.AntDesign}
+            size={moderateScale(20)}
+            onPress={() => onPress(id)}
+          />
+        )}
       </TouchableOpacity>
       {isCollapsable && (
         <View style={styles.collapseableContainer}>

@@ -14,6 +14,10 @@ import {moderateScale} from 'react-native-size-matters';
 import SignInScreen from './SignInScreen';
 import {navigationRef} from '../Services/NavigatorServices';
 import SignUpScreen from './SignUpScreen';
+import * as _ from 'lodash';
+import {getAsyncStorageItem, STORAGE_KEYS} from '../Utils/storage';
+import {setAuthToken} from '../Services/Api';
+import {printLogs} from '../Config/ReactotronConfig';
 
 const Tab = createBottomTabNavigator();
 
@@ -61,36 +65,54 @@ const Home = () => {
 };
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRouteName: 'SignInScreen',
+      isLoading: true,
+    };
+  }
+
+  componentDidMount = async () => {
+    const token = await getAsyncStorageItem(STORAGE_KEYS.TOKEN);
+    printLogs(token);
+    if (!_.isEmpty(token)) {
+      setAuthToken(token);
+      this.setState({initialRouteName: 'Acetaia'});
+    }
+    this.setState({isLoading: false});
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
-        <NavigationContainer ref={navigationRef}>
-          <Stack.Navigator
-          // initialRouteName={'BarrelDetailScreen'}
-          >
-            <Stack.Screen
-              name="SignInScreen"
-              component={SignInScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="SignUpScreen"
-              component={SignUpScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Acetaia"
-              component={Home}
-              options={{...navBarStyle}}
-            />
-            <Stack.Screen
-              name="BarrelDetailScreen"
-              component={BarrelDetailScreen}
-              options={{...navBarStyle, headerTitle: 'Barile Info'}}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        {!this.state.isLoading && (
+          <NavigationContainer ref={navigationRef}>
+            <Stack.Navigator initialRouteName={this.state.initialRouteName}>
+              <Stack.Screen
+                name="SignInScreen"
+                component={SignInScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="SignUpScreen"
+                component={SignUpScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Acetaia"
+                component={Home}
+                options={{...navBarStyle}}
+              />
+              <Stack.Screen
+                name="BarrelDetailScreen"
+                component={BarrelDetailScreen}
+                options={{...navBarStyle, headerTitle: 'Barile Info'}}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
       </View>
     );
   }

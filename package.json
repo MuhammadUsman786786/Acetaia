@@ -7,7 +7,12 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "iphone8": "react-native run-ios --simulator=\"iPhone 8\"",
+    "iphone8Plus": "react-native run-ios --simulator=\"iPhone 8 Plus\"",
+    "iphone11": "react-native run-ios --simulator=\"iPhone 11\"",
+    "iphone11Pro": "react-native run-ios --simulator=\"iPhone 11 Pro\"",
+    "iphoneProMax": "react-native run-ios --simulator=\"iPhone 11 Pro Max\""
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.7",

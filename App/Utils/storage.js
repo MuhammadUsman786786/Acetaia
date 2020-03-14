@@ -25,4 +25,5 @@ export const getUserName = async user => {
 export const STORAGE_KEYS = {
   TOKEN: 'TOKEN',
   ID: 'ID',
+  USER_ID: 'USER_ID',
 };

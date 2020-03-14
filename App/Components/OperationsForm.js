@@ -13,6 +13,7 @@ import {
 import ModalSelector from 'react-native-modal-selector';
 import {createOperationValidation} from '../Utils/Validation';
 import {printLogs} from '../Config/ReactotronConfig';
+import {getAsyncStorageItem, STORAGE_KEYS} from '../Utils/storage';
 
 export const DROPDOWN_HEADER = [{section: true, id: 'Select User Type'}];
 
@@ -58,7 +59,6 @@ class OperationsForm extends Component {
     try {
       await createOperationHandler(params, sourceBarrelObject);
       if (!_.isEmpty(sourceBarrelObject)) {
-        printLogs('called1')
         await editBarrelHandler(sourceBarrelObject, sourceBarrelObject.id, '');
       }
       if (!_.isEmpty(destinationBarrelObject)) {
@@ -86,13 +86,19 @@ class OperationsForm extends Component {
   onPageFocus = async () => {
     try {
       const barrelsList = await fetchBarrelsHandler();
-      this.setState({barrelsList: [...DROPDOWN_HEADER, ...barrelsList] || []});
+      const currentUserId = await getAsyncStorageItem(STORAGE_KEYS.USER_ID);
+      const myBarrelsList = _.filter(
+        barrelsList,
+        barrelItem => _.toString(barrelItem.author) === currentUserId,
+      );
+      this.setState({
+        barrelsList: [...DROPDOWN_HEADER, ...(myBarrelsList || [])] || [],
+      });
     } catch (e) {}
   };
 
   render() {
     const {formId, formLabel} = this.props;
-    const {barrelsList} = this.state;
     return (
       <View style={styles.formContainer}>
         <Text style={styles.titleStyle}>{formLabel} Operation</Text>

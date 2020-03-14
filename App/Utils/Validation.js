@@ -27,6 +27,10 @@ export const createBarrelValidation = props => {
     showToast('All fields are required');
     return;
   }
+  if (_.toNumber(quantity) > _.toNumber(capacity)) {
+    showToast('Quantity cannot be greater then capacity');
+    return false;
+  }
   return true;
 };
 

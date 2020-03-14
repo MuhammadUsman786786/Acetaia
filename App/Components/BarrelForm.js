@@ -151,16 +151,14 @@ class BarrelForm extends Component {
             />
           </ModalSelector>
         )}
-        {formMode === 'add' && (
-          <CustomInputField
-            isBottomSpacing
-            valueKey={'quantity'}
-            label={'Q.ta*'}
-            placeholder={'Quantity'}
-            value={this.state.quantity}
-            onChangeText={this.onChangeText}
-          />
-        )}
+        <CustomInputField
+          isBottomSpacing
+          valueKey={'quantity'}
+          label={'Q.ta*'}
+          placeholder={'Quantity'}
+          value={this.state.quantity}
+          onChangeText={this.onChangeText}
+        />
         <CustomButton title={'Crea'} onPress={this.onCreateEditBarrel} />
       </View>
     );

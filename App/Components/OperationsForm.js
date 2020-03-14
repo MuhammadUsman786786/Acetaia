@@ -86,13 +86,8 @@ class OperationsForm extends Component {
   onPageFocus = async () => {
     try {
       const barrelsList = await fetchBarrelsHandler();
-      const currentUserId = await getAsyncStorageItem(STORAGE_KEYS.USER_ID);
-      const myBarrelsList = _.filter(
-        barrelsList,
-        barrelItem => _.toString(barrelItem.author) === currentUserId,
-      );
       this.setState({
-        barrelsList: [...DROPDOWN_HEADER, ...(myBarrelsList || [])] || [],
+        barrelsList: [...DROPDOWN_HEADER, ...(barrelsList || [])] || [],
       });
     } catch (e) {}
   };

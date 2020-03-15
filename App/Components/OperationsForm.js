@@ -20,13 +20,13 @@ import {loadImageHandler} from '../Utils/ImageUtils';
 export const DROPDOWN_HEADER = [{section: true, id: 'Select User Type'}];
 
 const INITIAL_OPERATIONS_FORM = {
-  op_type: 'op_type',
-  vinegar_type: 'vinegar_type',
+  op_type: '',
+  vinegar_type: '',
   barrel_or: '',
   barrel_dest: '',
   quantity: '',
-  mis_type: 'mt',
-  mis_value: '0',
+  mis_type: '',
+  mis_value: '',
   description: '',
   isLoadImage: false,
   uploadedImage: {},
@@ -209,7 +209,7 @@ class OperationsForm extends Component {
           <View>
             <Text style={styles.labelStyle}>{'Upload Image*'}</Text>
             <IconButton
-              name={'image'}
+              name={'camera'}
               type={ICON_TYPES.Entypo}
               size={moderateScale(20)}
               onPress={this.showLoadImageBottomSheet}
@@ -243,14 +243,13 @@ const styles = StyleSheet.create({
   },
   operationImageStyle: {
     resizeMode: 'cover',
-    width: moderateScale(120),
-    height: moderateScale(120),
+    width: '100%',
+    height: moderateScale(300),
     borderRadius: moderateScale(6),
     marginTop: moderateScale(10),
     marginBottom: moderateScale(20),
   },
   labelStyle: {
     fontSize: moderateScale(15),
-    // marginBottom: moderateScale(5),
   },
 });

@@ -13,9 +13,9 @@ class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'test21test21',
-      password: 'test21test21',
-      confirmPassword: 'test21test21',
+      username: '',
+      password: '',
+      confirmPassword: '',
       isLoading: false,
     };
   }

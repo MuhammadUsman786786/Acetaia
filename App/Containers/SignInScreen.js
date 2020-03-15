@@ -12,8 +12,8 @@ class SignInScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'test21test21',
-      password: 'test21test21',
+      username: '',
+      password: '',
       isLoading: false,
       isCurrentScreen: true,
     };

@@ -23,7 +23,6 @@ import {
   STORAGE_KEYS,
 } from '../Utils/storage';
 import {NavigationService} from './NavigatorServices';
-import {printLogs} from '../Config/ReactotronConfig';
 
 //user
 export const loginHandler = data =>
@@ -235,7 +234,7 @@ const showErrorMessage = async errorObj => {
     return;
   }
   const {response: {data = [], status} = {}} = errorObj || {};
-  if (status === '401' || status === 401) {
+  if (status === '401' || status === 401 || status === 403) {
     NavigationService.resetAndNavigate('SignInScreen');
     await setStorageItem(STORAGE_KEYS.TOKEN, '');
     await setStorageItem(STORAGE_KEYS.USER_ID, '');

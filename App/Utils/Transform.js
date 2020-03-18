@@ -22,3 +22,11 @@ export const isBarrelDeleteable = (creatorId, barrelList, currentUserId) => {
   });
   return isDeleteAble;
 };
+
+export const buildFormData = data => {
+  const formData = new FormData();
+  _.forOwn(data, function(value, key) {
+    formData.append(key, value);
+  });
+  return formData;
+};

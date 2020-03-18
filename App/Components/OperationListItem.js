@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import moment from 'moment';
 import IconButton from './IconButton';
 import {ICON_TYPES} from '../Utilities/Constants';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import {moderateScale, scale} from 'react-native-size-matters';
 import * as _ from 'lodash';
 
@@ -29,6 +29,7 @@ const OperationListItem = props => {
     description,
     mis_type,
     mis_value,
+    image,
   } = item || {};
   const [isCollapsable, setCollapseAble] = useState(false);
   return (
@@ -104,6 +105,9 @@ const OperationListItem = props => {
               isDivider
             />
           )}
+          {!_.isEmpty(image) && (
+            <Image source={{uri: image}} style={styles.imageStyle} />
+          )}
         </View>
       )}
     </View>
@@ -150,5 +154,11 @@ const styles = StyleSheet.create({
   infoStyle: {
     flex: 1,
     fontSize: moderateScale(17),
+  },
+  imageStyle: {
+    width: '100%',
+    height: moderateScale(200),
+    borderRadius: moderateScale(6),
+    marginBottom: moderateScale(15),
   },
 });

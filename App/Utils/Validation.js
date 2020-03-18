@@ -196,8 +196,14 @@ export const forthOperationValidationHandler = (
 };
 
 const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
-  const {op_type, vinegar_type, barrel_or, description, isLoadImage} =
-    formData || {};
+  const {
+    op_type,
+    vinegar_type,
+    barrel_or,
+    description,
+    isLoadImage,
+    uploadedImage,
+  } = formData || {};
   if (
     _.isEmpty(op_type) ||
     _.isEmpty(vinegar_type) ||
@@ -218,6 +224,7 @@ const fifthOperationValidationHandler = (formData, formId, barrelsList) => {
       vinegar_type,
       barrel_or,
       description,
+      image: uploadedImage,
     },
   };
 };

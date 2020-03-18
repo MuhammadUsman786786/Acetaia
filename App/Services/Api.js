@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {buildFormData} from '../Utils/Transform';
 
 export const BASE_URL = 'http://localhost:8000';
 
@@ -9,6 +10,10 @@ export const setAuthToken = token => {
   if (token) {
     axios.defaults.headers.common.Authorization = `token ${token}`;
   }
+};
+
+const formDataHeaderConfig = {
+  headers: {'content-type': 'multipart/form-data'},
 };
 
 //user
@@ -35,6 +40,10 @@ export const deleteBarrel = data =>
 //operations
 export const getOperations = () => axios.get(`${BASE_URL}/operazioni/api/`);
 export const createOperation = data =>
-  axios.post(`${BASE_URL}/operazioni/api/`, data);
+  axios.post(
+    `${BASE_URL}/operazioni/api/`,
+    buildFormData(data),
+    formDataHeaderConfig,
+  );
 export const deleteOperation = data =>
   axios.delete(`${BASE_URL}/operazioni/api/${data.id}/`);

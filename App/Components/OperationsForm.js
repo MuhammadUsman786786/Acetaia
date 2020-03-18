@@ -12,7 +12,6 @@ import {
 } from '../Services/ApiCaller';
 import ModalSelector from 'react-native-modal-selector';
 import {createOperationValidation} from '../Utils/Validation';
-import {printLogs} from '../Config/ReactotronConfig';
 import {ICON_TYPES} from '../Utilities/Constants';
 import IconButton from './IconButton';
 import {loadImageHandler} from '../Utils/ImageUtils';
@@ -76,7 +75,6 @@ class OperationsForm extends Component {
         !_.isEmpty(sourceBarrelObject) ||
         !_.isEmpty(destinationBarrelObject)
       ) {
-        printLogs('focus');
         await this.onPageFocus();
       }
       this.setState({...INITIAL_OPERATIONS_FORM});

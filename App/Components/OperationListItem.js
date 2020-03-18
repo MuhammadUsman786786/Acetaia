@@ -5,6 +5,8 @@ import {ICON_TYPES} from '../Utilities/Constants';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import {moderateScale, scale} from 'react-native-size-matters';
 import * as _ from 'lodash';
+import {Colors} from '../Theme';
+import Modal from 'react-native-modal';
 
 const CollapseableItem = (props = {}) => {
   const {title, value, isDivider} = props || {};
@@ -17,6 +19,7 @@ const CollapseableItem = (props = {}) => {
 };
 const OperationListItem = props => {
   const {index, currentUserId, item} = props || {};
+  const [isImageModal, setImageModal] = useState(false);
   const {onPress} = props || {};
   const {
     date,
@@ -106,10 +109,23 @@ const OperationListItem = props => {
             />
           )}
           {!_.isEmpty(image) && (
-            <Image source={{uri: image}} style={styles.imageStyle} />
+            <IconButton
+              color={Colors.primary}
+              type={ICON_TYPES.Entypo}
+              name={'camera'}
+              size={moderateScale(30)}
+              onPress={() => setImageModal(true)}
+            />
           )}
         </View>
       )}
+      <Modal isVisible={isImageModal}>
+        <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={() => setImageModal(false)}>
+          <Image source={{uri: image}} style={styles.imageStyle} />
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -160,5 +176,10 @@ const styles = StyleSheet.create({
     height: moderateScale(200),
     borderRadius: moderateScale(6),
     marginBottom: moderateScale(15),
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

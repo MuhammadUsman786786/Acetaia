@@ -20,7 +20,7 @@ const INITIAL_BARREL_FORM = {
   capacity: '',
   wood_type: '',
   vinegar_type: '',
-  barrier_id: '',
+  battery_id: '',
   quantity: '',
 };
 
@@ -72,7 +72,7 @@ class BarrelForm extends Component {
       'capacity',
       'wood_type',
       'vinegar_type',
-      'barrier_id',
+      'battery_id',
       'quantity',
       'author',
     ]);
@@ -82,9 +82,9 @@ class BarrelForm extends Component {
     }
     try {
       if (formMode === 'add') {
-        await createBarrelHandler({...params, author: '15'});
+        await createBarrelHandler({...params});
       } else {
-        await editBarrelHandler({...params, author: '15'}, oldBarrelId);
+        await editBarrelHandler({...params}, oldBarrelId);
         this.props.onEditSuccessfull();
       }
       this.setState({...INITIAL_BARREL_FORM});
@@ -142,12 +142,12 @@ class BarrelForm extends Component {
                 ? `Barrel with Id ${data.id}`
                 : 'Select Barrel Origin';
             }}
-            onChange={item => this.setState({barrier_id: item.id})}>
+            onChange={item => this.setState({battery_id: item.id})}>
             <CustomInputField
               isBottomSpacing
               label={'Barrier id*'}
               placeholder={'Barrier id'}
-              value={_.toString(this.state.barrier_id)}
+              value={_.toString(this.state.battery_id)}
             />
           </ModalSelector>
         )}

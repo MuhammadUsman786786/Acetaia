@@ -28,6 +28,7 @@ import {NavigationService} from './NavigatorServices';
 export const loginHandler = data =>
   new Promise(async (resolve, reject) => {
     try {
+      await setAuthToken('');
       const apiResponse = await login(data);
       const {data: responseData = {}} = apiResponse || {};
       const {token, user} = responseData || {};
@@ -114,7 +115,8 @@ export const createBatteryHandler = data =>
 //barrels
 export const createBarrelHandler = data =>
   new Promise(async function(resolve, reject) {
-    createBarrel(data)
+    const author = await getAsyncStorageItem(STORAGE_KEYS.USER_ID);
+    createBarrel({...data, author})
       .then(response => {
         showToast('Created Successfully');
         resolve();

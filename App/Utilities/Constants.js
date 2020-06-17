@@ -49,7 +49,7 @@ export const DUMMY_BARRELS = [
 
 export const BARREL_DETAIL_ITEM_KEYS = [
   {key: 'id', title: 'BarrelID', isDivider: true},
-  {key: 'barrier_id', title: 'BarrierID', isDivider: true},
+  {key: 'battery_id', title: 'BarrierID', isDivider: true},
   {key: 'capacity', title: 'Capacity', isDivider: true},
   {key: 'wood_type', title: 'Wood type', isDivider: true},
   {key: 'vinegar_type', title: 'Vinegar type', isDivider: true},

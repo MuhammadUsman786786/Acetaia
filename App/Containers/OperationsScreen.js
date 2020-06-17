@@ -11,11 +11,14 @@ const FORM_LABELS = [
   'Misurazione',
   'Degustazione',
 ];
+
+const OP_TYPES = ['addition', 'withdraw', 'fill up', 'measurement', 'tasting'];
 class OperationsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentFormIndex: 0,
+      op_type: OP_TYPES[0],
     };
   }
 
@@ -24,7 +27,9 @@ class OperationsScreen extends Component {
       <CheckBox
         style={{marginLeft: scale(6)}}
         checkboxStyle={styles.checkboxStyle}
-        onClick={() => this.setState({currentFormIndex: index})}
+        onClick={() =>
+          this.setState({currentFormIndex: index, op_type: OP_TYPES[index]})
+        }
         isChecked={this.state.currentFormIndex === index}
         rightText={rightText}
         rightTextStyle={styles.rightTextStyle}
@@ -43,6 +48,7 @@ class OperationsScreen extends Component {
           {this.renderCheckBox(3, FORM_LABELS[3])}
           {this.renderCheckBox(4, FORM_LABELS[4])}
           <OperatoinsForm
+            op_type={this.state.op_type}
             formId={currentFormIndex}
             formLabel={FORM_LABELS[currentFormIndex]}
           />

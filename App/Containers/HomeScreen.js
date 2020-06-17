@@ -35,7 +35,7 @@ class HomeScreen extends Component {
       const currentUserId = await getAsyncStorageItem(STORAGE_KEYS.USER_ID);
       this.setState({
         batteriesList,
-        barrelsList: _.groupBy(barrelsList, 'barrier_id') || [],
+        barrelsList: _.groupBy(barrelsList, 'battery_id') || [],
         currentUserId,
       });
     } catch (e) {}

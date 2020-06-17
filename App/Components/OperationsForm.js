@@ -52,7 +52,7 @@ class OperationsForm extends Component {
       sourceBarrelObject = {},
       destinationBarrelObject = {},
     } = createOperationValidation(
-      this.state,
+      {...this.state, op_type: this.props.op_type},
       this.props.formId,
       this.state.barrelsList,
     );
@@ -110,8 +110,9 @@ class OperationsForm extends Component {
           valueKey={'op_type'}
           label={'Types of Operation*'}
           placeholder={'Types of Operation'}
-          value={this.state.op_type}
+          value={this.props.op_type}
           onChangeText={this.onChangeText}
+          isEditable={false}
         />
         <CustomInputField
           isBottomSpacing

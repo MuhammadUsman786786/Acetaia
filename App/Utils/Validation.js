@@ -12,7 +12,7 @@ export const createBarrelIdValidation = props => {
 };
 
 export const createBarrelValidation = props => {
-  const {id, capacity, wood_type, vinegar_type, barrier_id, quantity, author} =
+  const {id, capacity, wood_type, vinegar_type, battery_id, quantity, author} =
     props || {};
   printLogs(props);
   if (
@@ -20,7 +20,7 @@ export const createBarrelValidation = props => {
     _.isEmpty(_.toString(capacity)) ||
     _.isEmpty(wood_type) ||
     _.isEmpty(vinegar_type) ||
-    _.isEmpty(_.toString(barrier_id)) ||
+    _.isEmpty(_.toString(battery_id)) ||
     _.isEmpty(_.toString(quantity)) ||
     _.isEmpty(_.toString(author))
   ) {
